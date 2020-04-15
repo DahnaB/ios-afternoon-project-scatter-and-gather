@@ -20,7 +20,7 @@ class AnimationViewController: UIViewController {
     @IBOutlet weak var secondALabel: UILabel!
     @IBOutlet weak var lambdaImage: UIImageView!
     
-    
+    var letterArray: [UILabel] = []
     
     @IBAction func toggleButton(_ sender: UIBarButtonItem) {
         isScattered.toggle()
@@ -35,98 +35,103 @@ class AnimationViewController: UIViewController {
             returnToIdentity()
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         
     }
-    
     // Lambda Image Fades
     func fadeImageOut() {
-        UIView.animate(withDuration: 2) {
+        UIView.animate(withDuration: 2.5) {
             self.lambdaImage.alpha = 0
         }
     }
     func fadeImageIn() {
-        UIView.animate(withDuration: 2) {
+        UIView.animate(withDuration: 2.5) {
             self.lambdaImage.alpha = 1
         }
         
     }
     
-    func randomAnimations() {
-        UIView.animateKeyframes(withDuration: 2.0, delay: 0, options: [], animations: randomLabelBlock, completion: nil)
+    func randomBlock(label: UILabel) {
+        
+        let label = label
+        
+        
+        UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.001) {
+            label.center = label.center
+        }
+        UIView.transition(with: label, duration: 0.00001, options: .transitionCrossDissolve, animations: {
+            label.textColor = .random()
+        }, completion: nil)
+        UIView.transition(with: label, duration: 0.0001, options: .transitionCrossDissolve, animations: {
+            label.backgroundColor = .random()
+        }, completion: nil)
+        UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 1.5) {
+            label.transform = CGAffineTransform(rotationAngle: -1 * .pi/CGFloat.random(in: -10...10))
+        }
+        UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 1.5) {
+            label.transform = CGAffineTransform(translationX: (CGFloat.random(in: -200...200)),
+                                                y: (CGFloat.random(in: -100...300)))
+        }
+        
+        
     }
     
-    func originalStateAnimations() {
-        UIView.animateKeyframes(withDuration: 2.0, delay: 0, options: [], animations: returnToIdentity, completion: nil)
-    }
     
     func randomLabelBlock() {
-        let letterArray: [UILabel] = [lLabel, aLabel, mLabel, bLabel, dLabel, secondALabel]
+        letterArray = [lLabel, aLabel, mLabel, bLabel, dLabel, secondALabel]
         
         for letter in letterArray {
-//            letter.textColor = getRandomColor()
-            letter.backgroundColor = getRandomColor()
-            rotateLabel(label: letter)
-            moveLabel(label: letter)
-            randomTextColor(label: letter)
+            randomBlock(label: letter)
         }
     }
     
-    
-    func getRandomColor() -> UIColor {
-        let randomColor = UIColor(red: (CGFloat.random(in: 1...255)),
-                                  green: (CGFloat.random(in: 1...255)),
-                                  blue: CGFloat.random(in: 1...255),
-                                  alpha: 1)
-        return randomColor
+    func randomAnimations() {
+        UIView.animateKeyframes(withDuration: 4.0, delay: 0, options: [], animations: randomLabelBlock, completion: nil)
     }
     
-    func rotateLabel(label: UILabel) {
-        let label = label
-        UIView.animate(withDuration: 2.0, animations: {
-            label.transform = CGAffineTransform(rotationAngle: -1 * .pi/(CGFloat.random(in: 2...6)))
-        })
-    }
-    
-    func originalRotation(label: UILabel) {
-        let label = label
-        UIView.animate(withDuration: 2.0) {
+    func normalBlock(label: UILabel) {
+        
+        UIView.transition(with: label, duration: 0.01, options: .transitionCrossDissolve, animations: {
+            label.textColor = .black
+        }, completion: nil)
+        UIView.transition(with: label, duration: 0.01, options: .transitionCrossDissolve, animations: {
+            label.backgroundColor = .white
+        }, completion: nil)
+        UIView.transition(with: label, duration: 2, options: .transitionCrossDissolve, animations: {
             label.transform = .identity
-        }
+        }, completion: nil)
     }
     
-    func randomTextColor(label: UILabel) {
-        let label = label
-        UIView.animate(withDuration: 2.0) {
-            label.textColor = self.getRandomColor()
+    func normalLabelBlock() {
+        for letter in letterArray {
+            normalBlock(label: letter)
         }
-    }
-
-    
-    func moveLabel(label: UILabel) {
-        let label = label
-       
-        UIView.animate(withDuration: 2.0) {
-            label.transform = CGAffineTransform(translationX: (CGFloat.random(in: 1...100)), y: (CGFloat.random(in: -100...100)))
-        }
+        
     }
     
     func returnToIdentity() {
-        let letterArray: [UILabel] = [lLabel, aLabel, mLabel, bLabel, dLabel, secondALabel]
-        
-        for letter in letterArray {
-            letter.textColor = .black
-            letter.backgroundColor = .white
-            originalRotation(label: letter)
-            
-        }
+        UIView.animateKeyframes(withDuration: 4.0, delay: 0, options: [], animations: normalLabelBlock, completion: nil)
     }
+    
+    
+    
+    
 
-  
-    // MARK: - Navigation
+    
+    
+}
 
+extension CGFloat {
+    static func random() -> CGFloat {
+        return CGFloat(arc4random()) / CGFloat(UInt32.max)
+    }
+}
 
+extension UIColor {
+    static func random() ->UIColor {
+        return UIColor(red: .random(), green: .random(), blue: .random(), alpha: 1.0)
+    }
 }
