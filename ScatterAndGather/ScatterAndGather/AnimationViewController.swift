@@ -89,7 +89,7 @@ class AnimationViewController: UIViewController {
     }
     
     func randomAnimations() {
-        UIView.animateKeyframes(withDuration: 4.0, delay: 0, options: [], animations: randomLabelBlock, completion: nil)
+        UIView.animateKeyframes(withDuration: 3.0, delay: 0, options: [], animations: randomLabelBlock, completion: nil)
     }
     
     func normalBlock(label: UILabel) {
@@ -113,7 +113,7 @@ class AnimationViewController: UIViewController {
     }
     
     func returnToIdentity() {
-        UIView.animateKeyframes(withDuration: 4.0, delay: 0, options: [], animations: normalLabelBlock, completion: nil)
+        UIView.animateKeyframes(withDuration: 3.0, delay: 0, options: [], animations: normalLabelBlock, completion: nil)
     }
     
     
